@@ -75,7 +75,9 @@ es:
   "View all %{attribute}":
   "View site": "Ver web"
 
-  "%{errors} prohibited this page from being saved:":
+  "%{errors} error prohibited this page from being saved:": "Se encontró %{errors} error:"
+  "%{errors} errors prohibited this page from being saved:": "Se encontraron %{errors} errores:"
+  
   "%{model} successfully created": "%{model} satisfactoriamente creado."
   "%{model} successfully removed": "%{model} satisfactoriamente eliminado."
   "%{model} successfully updated": "%{model} satisfactoriamente actualizado."
