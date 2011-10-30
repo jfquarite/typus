@@ -204,6 +204,8 @@ class Admin::ResourcesController < Admin::BaseController
       { :action => 'new', :id => nil }
     elsif params[:_continue]
       { :action => 'edit', :id => @item.id }
+    elsif params[:_cancel]
+      { :action => nil, :id =>nil }
     end
 
     message = params[:action].eql?('create') ? "%{model} successfully created." : "%{model} successfully updated."
