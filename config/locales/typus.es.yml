@@ -77,7 +77,7 @@ es:
   "You can't change your role": "No puedes cambiar tu propio rol."
   "You can't toggle your status": "No puedes cambiar tu estado."
 
-  "View all %{attribute}":
+  "View all %{attribute}":"Ver %{attribute}"
   "View site": "Ver web"
 
   "%{errors} error prohibited this page from being saved:": "Se encontró %{errors} error:"
