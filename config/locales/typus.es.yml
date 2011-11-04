@@ -83,6 +83,6 @@ es:
   "%{errors} error prohibited this page from being saved:": "Se encontró %{errors} error:"
   "%{errors} errors prohibited this page from being saved:": "Se encontraron %{errors} errores:"
   
-  "%{model} successfully created": "Creación de %{model} realizado de manera satisfactoria."
-  "%{model} successfully removed": "Eliminación de %{model} realizado de manera satisfactoria."
-  "%{model} successfully updated": "Actualización de %{model} realizado de manera satisfactoria."
+  "%{model} successfully created": "Creación de %{model} realizada de manera satisfactoria."
+  "%{model} successfully removed": "Eliminación de %{model} realizada de manera satisfactoria."
+  "%{model} successfully updated": "Actualización de %{model} realizada de manera satisfactoria."
