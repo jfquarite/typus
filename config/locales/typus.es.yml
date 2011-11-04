@@ -17,7 +17,7 @@ es:
 
   "Dashboard": "Panel de control"
   "Down": "Bajar"
-  "Applications": "Applicaciones"
+  "Applications": "Aplicaciones"
 
   "Edit": "Editar"
   "Edit %{resource}": "Editar %{resource}"
@@ -40,7 +40,7 @@ es:
   "New": "Nuevo"
   "New %{resource}": "Nuevo %{resource}"
   "Next": "Siguiente"
-  "No %{resources} found": "No se han encontrado %{resources}."
+  "No %{resources} found": "No se encontraron %{resources}."
 
   "Password recovery link sent to your email": "Enlace de recuperación de contraseña enviado a tu correo electrónico."
   "Previous": "Anterior"
@@ -83,6 +83,6 @@ es:
   "%{errors} error prohibited this page from being saved:": "Se encontró %{errors} error:"
   "%{errors} errors prohibited this page from being saved:": "Se encontraron %{errors} errores:"
   
-  "%{model} successfully created": "%{model} satisfactoriamente creado."
-  "%{model} successfully removed": "%{model} satisfactoriamente eliminado."
-  "%{model} successfully updated": "%{model} satisfactoriamente actualizado."
+  "%{model} successfully created": "Creación de %{model} realizado de manera satisfactoria."
+  "%{model} successfully removed": "Eliminación de %{model} realizado de manera satisfactoria."
+  "%{model} successfully updated": "Actualización de %{model} realizado de manera satisfactoria."
