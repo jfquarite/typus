@@ -200,10 +200,10 @@ class Admin::ResourcesController < Admin::BaseController
 
     options = if params[:_save]
       { :action => nil, :id => nil }
-   # elsif params[:_addanother]
-   #  { :action => 'new', :id => nil }
-    elsif params[:_continue]
-      { :action => 'edit', :id => @item.id }
+    elsif params[:_addanother]
+     { :action => 'new', :id => nil }
+   # elsif params[:_continue]
+    #  { :action => 'edit', :id => @item.id }
     end
 
     message = params[:action].eql?('create') ? "%{model} successfully created." : "%{model} successfully updated."
