@@ -41,6 +41,7 @@ es:
   "New %{resource}": "Nuevo %{resource}"
   "Next": "Siguiente"
   "No %{resources} found": "No se encontraron %{resources}."
+  "No Postulant found": "No se encontró ningún Postulante."
 
   "Password recovery link sent to your email": "Enlace de recuperación de contraseña enviado a tu correo electrónico."
   "Previous": "Anterior"
