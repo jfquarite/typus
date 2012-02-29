@@ -209,7 +209,7 @@ class Admin::ResourcesController < Admin::BaseController
     message = params[:action].eql?('create') ? "%{model} successfully created." : "%{model} successfully updated."
     notice = Typus::I18n.t(message, :model => @resource.model_name.human)
 
-    redirect_to path.merge!(options).compact, :notice => notice
+    redirect_to @resource.model_name == "AdminUser" ? {:controller => "dashboard"} : path.merge!(options).compact, :notice => notice
   end
 
   def set_default_action
