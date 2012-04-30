@@ -3,7 +3,7 @@ module Typus
     module ActiveRecord
       module ClassMethods
 
-        include Typus::Orm::Base
+        include Typus::Orm::Base::ClassMethods
 
         # Model fields as an <tt>ActiveSupport::OrderedHash</tt>.
         def model_fields
@@ -51,10 +51,6 @@ module Typus
           filter.to_sym.eql?(:index) ? ['id'] : model_fields.keys
         end
 
-        def virtual_fields
-          instance_methods.map(&:to_s) - model_fields.keys.map(&:to_s)
-        end
-
         def virtual_attribute?(field)
           :virtual if virtual_fields.include?(field.to_s)
         end
@@ -79,26 +75,23 @@ module Typus
           reflect_on_association(field).macro if reflect_on_association(field)
         end
 
-        def custom_attribute?(field)
-          case field.to_s
-          when 'parent', 'parent_id' then :tree
-          when /password/            then :password
-          when 'position'            then :position
-          when /\./                  then :transversal
-          end
-        end
-
         def typus_filters
-          ActiveSupport::OrderedHash.new.tap do |fields_with_type|
+          filters = ActiveSupport::OrderedHash.new.tap do |fields_with_type|
             get_typus_filters.each do |field|
               fields_with_type[field.to_s] = association_attribute?(field) || model_fields[field.to_sym]
             end
           end
+          # Remove unsupported filters!
+          filters.reject { |k, v| [:time].include?(v) }
         end
 
         def get_typus_filters
           data = read_model_config['filters'] || ""
           data.extract_settings.map(&:to_sym)
+        end
+
+        def typus_user_id?
+          columns.map(&:name).include?(Typus.user_foreign_key)
         end
 
       end

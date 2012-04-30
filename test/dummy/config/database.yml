@@ -6,19 +6,30 @@
 
 sqlite3: &sqlite3
   adapter: sqlite3
-  database: db/typus.sqlite3
+  database: db/<%= Rails.env %>.sqlite3
+  pool: 5
+  timeout: 5000
 
 postgresql: &postgresql
   adapter: postgresql
   encoding: unicode
-  database: typus_development
-  username: postgres
+  database: typus_<%= Rails.env %>
+  pool: 5
+  username: <%= ENV['DB_USERNAME'] || 'postgres' %>
+  password: <%= ENV['DB_PASSWORD'] || '' %>
   min_messages: warning
+  # host: localhost
+  # port: 5432
 
 mysql2: &mysql2
   adapter: mysql2
-  database: typus_development
-  host: localhost
+  encoding: utf8
+  reconnect: false
+  database: typus_<%= Rails.env %>
+  pool: 5
+  username: <%= ENV['DB_USERNAME'] || 'root' %>
+  password: <%= ENV['DB_PASSWORD'] || '' %>
+  host: <%= ENV['DB_HOST'] || 'localhost' %>
 
 ##
 # Environments
@@ -29,7 +40,6 @@ development:
 
 test:
   <<: *<%= connection %>
-  database: typus_test
 
 production:
   <<: *<%= connection %>

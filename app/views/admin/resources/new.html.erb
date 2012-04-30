@@ -1,6 +1,6 @@
 <%
-  page_title = Typus::I18n.t("Add New %{resource}", :resource => @resource.model_name.human)
-  title(page_title)
+  page_title = Typus::I18n.t("Add %{resource}", :resource => @resource.model_name.human)
+  admin_title(page_title)
 %>
 
 <% content_for :main_grid do %>
@@ -9,7 +9,7 @@
     <small><%= list_actions %></small>
   </h2>
 
-  <%= display_flash_message %>
+  <%= admin_display_flash_message %>
   <%= render 'new' %>
 
   <% locals = { :options => params.dup.cleanup.merge(:action => 'create') } %>

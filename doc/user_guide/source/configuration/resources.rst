@@ -262,7 +262,7 @@ video or whatever in the model?
 
 .. code-block:: yaml
 
-  Person:
+  Video:
     fields:
       ...
       options:
@@ -277,6 +277,10 @@ selector with the options that you define in your model.
   class Video < ActiveRecord::Base
     STATUS = %w(pending encoding encoded error published)
     validates_inclusion_of :status, :in => STATUS
+
+    def self.statuses
+      STATUS
+    end
   end
 
 .. note::
@@ -357,32 +361,6 @@ For feedback you can use the following flash methods.
 
 * ``flash[:notice]`` to deliver feedback.
 * ``flash[:alert]`` when there's something wrong.
-
-
-Exporting Data
---------------
-
-**Typus** allows to export data. Only XML and CSV exporting methods are
-implemented but you can easily add your own. You will see the export links on
-the sidebar of your resource.
-
-.. code-block:: yaml
-
-  Order:
-    ...
-    export: csv, xml
-
-And the actions for those export options are:
-
-.. code-block:: ruby
-  
-  def export_csv
-    # Already implemented but you can override it.
-  end
-
-  def export_xml
-    # Already implemented but you can override it.
-  end
 
 
 Applications
@@ -497,3 +475,37 @@ You can also define this option by model.
     ...
     options:
       start_year: 1990
+
+
+Counters
+^^^^^^^^
+
+If you want to show resources count when listing items. Disable it if you have
+resources with many records.
+
+.. code-block:: ruby
+
+  Typus::Resources.setup do |config|
+    config.counters = true
+  end
+
+You can also define this option by model.
+
+.. code-block:: yaml
+
+  Post:
+    ...
+    options:
+      counters: true
+
+Exporting Data
+^^^^^^^^^^^^^^
+
+**Typus** allows to export data in CSV, JSON and XML.
+
+.. code-block:: yaml
+
+  Post:
+    ...
+    options:
+      export: csv, json, xml

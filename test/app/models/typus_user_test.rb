@@ -107,38 +107,15 @@ class TypusUserTest < ActiveSupport::TestCase
   test "to_label" do
     user = FactoryGirl.build(:typus_user)
     assert_equal user.email, user.to_label
-
-    user = FactoryGirl.build(:typus_user, :first_name => "John")
-    assert_equal "John", user.to_label
-
-    user = FactoryGirl.build(:typus_user, :last_name => "Locke")
-    assert_equal "Locke", user.to_label
-
-    user = FactoryGirl.build(:typus_user, :first_name => "John", :last_name => "Locke")
-    assert_equal "John Locke", user.to_label
   end
 
-  test "admin gets a list of all applications expect MongoDB becuase is disabled" do
+  test "admin gets a list of all applications" do
     typus_user = FactoryGirl.build(:typus_user)
-    # assert_equal Typus.applications, typus_user.applications
-    assert_equal Typus.applications.reject { |i| i.eql?("MongoDB") }, typus_user.applications
+    assert_equal Typus.applications, typus_user.applications
   end
-
-=begin
-  # TODO: Decide if we want this test ...
-  test "admin gets a list of application resources for crud extended application" do
-    typus_user = FactoryGirl.build(:typus_user)
-    # OPTIMIZE: There's no need to sort stuff but this is required to make it
-    #           work with Ruby 1.8.7.
-    expected = %w(Asset Case Comment EntryDefault Page Post Article::Entry ReadOnlyEntry).sort
-    assert_equal expected, typus_user.application("CRUD Extended").sort
-  end
-=end
 
   test "admin gets a list of application resources for Admin application" do
     typus_user = FactoryGirl.build(:typus_user)
-    # OPTIMIZE: There's no need to sort stuff but this is required to make it
-    #           work with Ruby 1.8.7.
     expected = %w(AdminUser TypusUser DeviseUser).sort
     assert_equal expected, typus_user.application("Admin").sort
   end

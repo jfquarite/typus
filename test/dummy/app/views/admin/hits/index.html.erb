@@ -1,6 +1,6 @@
 <%
   page_title = @resource.model_name.human.pluralize
-  title(page_title)
+  admin_title(page_title)
 %>
 
 <% content_for :main_grid do %>
@@ -10,7 +10,7 @@
     <small><%= list_actions %></small>
   </h2>
 
-  <%= display_flash_message %>
+  <%= admin_display_flash_message %>
 
   <%= render 'index' %>
 
@@ -22,9 +22,9 @@
 
   <% if @items.any? -%>
     <%= build_list(@resource, fields, @items) %>
-    <%= paginate(@items, Typus.pagination) %>
+    <%= admin_paginate(@items, Typus.pagination) %>
   <% else %>
-    <p><%= Typus::I18n.t("No %{resources} found.", :resources => @resource.model_name.human.downcase.pluralize) %></p>
+    <p><%= Typus::I18n.t("No entries found.") %></p>
   <% end %>
 
 <% end %>

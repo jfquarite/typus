@@ -8,7 +8,6 @@
   "Add": "Adicionar"
   "Add New": "Adicionar novo"
   "Are you sure?": "Tem a certeza?"
-  "Are you sure you want to sign out and end your session?": "Tem certeza que quer sair e encerrar sua sessão?"
 
   "Change %{attribute}?": "Mudar %{attribute}?"
   "Create %{resource}": "Criar %{resource}"
@@ -32,7 +31,6 @@
   "Last 30 days": "Últimos 30 dias"
   "Last 7 days": "Últimos 7 dias"
   "List": "Lista"
-  "Logged in as": "Logado como"
   "Login": "Login"
 
   "New": "Novo"
@@ -51,6 +49,10 @@
   "Resources": "Recursos"
 
   "Save %{resource}": "Salvar %{resource}"
+  "Save": "Salvar"
+  "Save and continue editing": "Salvar e continuar editando"
+  "Save and add another": "Salvar e adicionar outro"
+  "Trash": "Excluir"
   "Search": "Procurar"
   "Show": "Mostrar"
   "Show all dates": "Mostrar todas as datas"

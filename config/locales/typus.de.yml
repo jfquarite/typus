@@ -10,7 +10,6 @@ de:
   "Add New": "Erstellen"
   "All" : 'Alle'
   "Are you sure?": "Sind Sie sicher?"
-  "Are you sure you want to sign out and end your session?": "Wollen Sie sich abmelden und die Sitzung beenden?"
   "Assign": "Zuweisen"
 
   "Change %{attribute}?": "%{attribute} ändern?"
@@ -35,7 +34,6 @@ de:
   "Last 30 days": "Letzten 30 Tage"
   "Last 7 days": "Letzten 7 Tage"
   "List" : "Liste"
-  "Logged in as": "Angemeldet als"
   "Login": "Anmelden"
 
   "New": "Neu"

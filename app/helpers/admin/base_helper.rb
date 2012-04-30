@@ -1,28 +1,23 @@
 module Admin::BaseHelper
 
-  def title(page_title)
-    content_for(:title) { page_title }
+  def admin_header
+    render "helpers/admin/base/header", { :admin_title => admin_title }
   end
 
-  def header
-    locals = { :admin_title => admin_title }
-    render "helpers/admin/base/header", locals
+  def admin_title(page_title = nil)
+    if page_title
+      content_for(:title) { page_title }
+    else
+      setting = defined?(Admin::Setting) && Admin::Setting.admin_title
+      setting || Typus.admin_title
+    end
   end
 
-  def admin_title
-    setting = defined?(Admin::Setting) && Admin::Setting.admin_title
-    setting || Typus.admin_title
-  end
-
-  def has_root_path?
-    Rails.application.routes.routes.map(&:name).include?("root")
-  end
-
-  def apps
+  def admin_apps
     render "helpers/admin/base/apps"
   end
 
-  def login_info
+  def admin_login_info
     render "helpers/admin/base/login_info" unless admin_user.is_a?(FakeUser)
   end
 
@@ -35,7 +30,13 @@ module Admin::BaseHelper
     end
   end
 
-  def display_flash_message(message = flash)
+  def admin_edit_user_path(user)
+    { :controller => "/admin/#{Typus.user_class.to_resource}",
+      :action => "edit",
+      :id => user.id }
+  end
+
+  def admin_display_flash_message(message = flash)
     if message.keys.any?
       locals = { :flash_type => message.keys.first, :message => message }
       render "helpers/admin/base/flash_message", locals

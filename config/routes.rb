@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
     if Typus.authentication == :session
       resource :session, :only => [:new, :create], :controller => :session do
-        get :destroy, :as => "destroy"
+        delete :destroy, :as => "destroy"
       end
 
       resources :account, :only => [:new, :create, :show] do
@@ -21,13 +21,14 @@ Rails.application.routes.draw do
       end
     end
 
-    Typus.models.map(&:to_resource).each do |resource|
-      match "#{resource}(/:action(/:id))(.:format)", :controller => resource
+    Typus.models.map(&:to_resource).each do |_resource|
+      match "#{_resource}(/:action(/:id))(.:format)", :controller => _resource
     end
 
-    Typus.resources.map(&:underscore).each do |resource|
-      match "#{resource}(/:action(/:id))(.:format)", :controller => resource
+    Typus.resources.map(&:underscore).each do |_resource|
+      match "#{_resource}(/:action(/:id))(.:format)", :controller => _resource
     end
+
   end
 
   if Typus.subdomain
@@ -37,4 +38,5 @@ Rails.application.routes.draw do
   else
     scope "admin", {:module => :admin, :as => "admin"}, &routes_block
   end
+
 end

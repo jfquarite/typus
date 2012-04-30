@@ -7,7 +7,7 @@ require "typus/version"
 
 files = `git ls-files`.split("\n")
 test_files = `git ls-files -- test/*`.split("\n")
-ignores = `git ls-files -- doc/* Guardfile .travis.yml .gitignor .travis.yml .gitignore`.split("\n")
+ignores = `git ls-files -- doc/* Guardfile .travis.yml .gitignore`.split("\n")
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
@@ -26,10 +26,9 @@ Gem::Specification.new do |s|
   s.test_files    = []
   s.require_paths = ["lib"]
 
-  s.add_dependency "bcrypt-ruby", "~> 3.0.0"
-  s.add_dependency "jquery-rails"
-  s.add_dependency "kaminari"
-  s.add_dependency "rails", "~> 3.1.0"
+  s.add_dependency "bcrypt-ruby", "~> 3.0.1"
+  s.add_dependency "jquery-rails", "~> 2.0.1"
+  s.add_dependency "rails", "~> 3.2.2"
 
   # Development dependencies are defined in the `Gemfile`.
 end

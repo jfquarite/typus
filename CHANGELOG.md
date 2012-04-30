@@ -1,6 +1,200 @@
-= 3.2.0 (unreleased)
+CHANGELOG
+=========
 
-= 3.1.3 (unreleased)
+3.2.0 (unrelased)
+------------------
+
+ * [CHANGED] Dropped support for Ruby 1.8.7. This doesn't mean Typus will
+   not run willith that version of Ruby, but I don't longer have plans to
+   test against that version.
+
+ * [CHANGED] We do not longer look for Typus configuration files in the
+   plugins folder. Store them in `config/typus` or `lib/*/config/typus`.
+   Rails 4 will not support plugins and Rails 3.2 marks them as deprecated
+   so doesn't make sense to support them anymore.
+
+ * [CHANGED] Require at least `Rails 3.2.2`.
+
+ * [FIXED] Documentation about exporting data.
+
+ * [CHANGED] `login_info` helper becomes `admin_login_info`.
+
+ * [CHANGED] `search` helper becomes `admin_search`.
+
+ * [CHANGED] `title` helper becomes `admin_title` (and merged methods).
+
+ * [CHANGED] `apps` helper becomes `admin_apps`.
+
+ * [CHANGED] We do not longer detect if the application has a `root_path`
+   defined. A new setting `Typus.admin_title_link` has been added so we have
+   more control on which URL we want to use. This is useful because we don't
+   always want to link to the main site.
+
+ * [CHANGED] `display_flash_message` becomes `admin_display_flash_message`.
+
+ * [CHANGED] "Add New" becomes "Add".
+
+ * [FIXED] `return_to` now works as expected so now it's easier to send links to
+    the admin interface.
+
+ * [CHANGED] "Applications" in dashboard is now "Site administration".
+
+ * [FIXED] Model names in Trash module.
+
+ * [CHANGED] Removed `generate_html` alias method and use `get_paginated_data`.
+   This also fixes the usage of `ctags`.
+
+ * [CHANGED] Do not show "Add" link on the sidebar because it's confusing,
+   duplicated. We also have plans to remove the sidebar, so consider this as an
+   starting point. (Sidebar will be replaced by a drop down menu.)
+
+ * [CHANGED] No need to confirm when pressing "Sign out".
+
+ * [CHANGED] Instead of settings the session to `nil` when login out, we are
+   now removing it using `session.delete(:typus_user_id)`.
+
+ * [CHANGED] `TypusClass#to_label` now returns the email.
+
+ * [CHANGED] Session and account forms are now using `Typus.user_class`.
+
+ * [CHANGED] Extracted `account` and `session` forms into a partial.
+
+ * [CHANGED] `not_allowed` now accepts an param so we can give better feedback
+   to the user when an action is not allowed.
+
+ * [FIXED] Filter scopes so we can only run those scopes defined in configuration
+   files.
+
+ * [NEW] `Model.typus_scopes` to detect defined scopes.
+
+ * [CHANGED] Datetime/Time filters use Time intervals. (all_day, all_week ...)
+
+ * Added pagination detection on associations.
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.10...master>
+
+3.1.11 (unreleased)
+-------------------
+
+ * Added pagination detection on associations.
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.10...3-1-stable>
+
+
+3.1.10 (2012-03-27)
+-------------------
+
+ * [FIXED] Filter scopes so we can only run those scopes defined in configuration
+   files.
+
+ * [NEW] `Model.typus_scopes` to detect defined scopes.
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.9...v3.1.10>
+
+
+3.1.9 (2012-03-08)
+------------------
+
+ * [FIXED] _addanother save button is only shown if the user has permission
+   to perform the action.
+
+ * [FIXED] Custom actions on show are now showed.
+
+ * [CHANGED] Detect if application has Kaminari or WillPaginate, otherwise
+   we will not setup a paginate and will tell the user to install one of
+   those mechanisms. In the near future Typus will provide a simple
+   pagination mechahism.
+
+ * [NEW] Option to enable and disable counters on resources. Enabled by default.
+
+ * [FIXED] Fixed Dir compatibility for Jruby.
+
+ * [CHANGED] session#destroy now uses DELETE.
+
+ * [CHANGED] CSV/XML links should include filters.
+
+ * [CHANGED] Removed find_in_batches from "csv_export". It was useless.
+
+ * [FIXED] Fixed converting route to resource for "singular" class. Eg.
+   "CustomerData" was being converted to "CustomerDatum".
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.8...v3.1.9>
+
+
+3.1.8 (2012-02-05)
+------------------
+
+ * [CHANGED] CSV generation is now performed in memory so we play nice
+   with Heroku.
+
+ * [CHANGED] We now can export XML, CSV and JSON without restriction. If
+   fields are not defined for a format, defaults will be used.
+
+ * [CHANGED] Updated Kaminari to `0.13.0` so we are now Rails `3.2.0`
+   compatible.
+
+ * [CHANGED] We now also load configuration files from "lib/<plugin>/config"
+   as this is marked as deprecated in Rails 3.2.0.
+
+ * [CHANGED] Updated Gems for the dummy application. This fixes deprecation
+   warnings and keeps the plugin up to date.
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.7...v3.1.8>
+
+
+3.1.7 (2012-01-25)
+------------------
+
+ * [FIXED] Require ActiveRecord extension only if ActiveRecord is defined.
+
+ * [NEW] Show association name on related tables.
+
+ * [FIXED] Fixed gemspec to add compatibility with Rails 3.2.0
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.6...v3.1.7>
+
+
+3.1.6 (2012-01-02)
+------------------
+
+ * [FIXED] "Save and continue editing" button was shown even when the
+   user didn't have acess to it.
+
+ * [CHANGED] Improved MongoDB support.
+
+ * [NEW] We can now filter by integer.
+
+ * [FIXED] Independent paginators when showing associations.
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.5...v3.1.6>
+
+
+3.1.5 (2011-12-10)
+------------------
+
+ * [CHANGED] Association tables now contain a "show" link.
+
+ * [FIXED] Generators check if there's a database connection.
+
+ * [CHANGED] ActsAsList module now can only perform whitelisted actions.
+
+ * [CHANGED] ActsAsList hooks moved completely to it's module.
+
+ * [CHANGED] Repository moved again to http://github.com/fesplugas/typus
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.4...v3.1.5>
+
+
+3.1.4
+-----
+
+ * [FIXED] Belongs to helper was not creating properly class ids.
+
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.3...v3.1.4>
+
+
+3.1.3
+-----
 
  * [CHANGED] Added `Typus.chosen` so we can disable "Chosen". This will
    be in Typus until "Chosen" supports remote data calls.
@@ -23,14 +217,20 @@
 
  * [FIXED] Detaching a Paperclip was not working.
 
-= 3.1.2
+Changes: <https://github.com/fesplugas/typus/compare/v3.1.2...v3.1.3>
+
+
+3.1.2
+-----
 
  * [CHANGED] Images, links and belongs_to associations do not have links
    when popup mode. This will avoid an "Inception" problem.
 
  * [FIXED] Problems on HABTM associations when generating association names.
 
-= 3.1.1
+
+3.1.1
+-----
 
  * [CHANGED] Removed user guide. Docs can now be found at http://docs.typuscmf.com/
 
@@ -51,7 +251,9 @@
 
  * [CHANGED] Default development/test database is now **Postgresql**.
 
-= 3.1.0
+
+3.1.0
+-----
 
  * [NEW] Filter with scopes.
 
@@ -132,27 +334,37 @@
 
  * [CHANGED] Configuration files are now generated by model not by groups.
 
-= 3.0.12
+
+3.0.12
+------
 
  * [FIXED] Use will_paginate 3.0.0.
 
-= 3.0.9
+
+3.0.9
+-----
 
  * [NEW] Refactored and renamed `User` extensions to `AdminUserV1`.
 
  * [NEW] `AdminUserV2` which uses `bcrypt` and it's simpler. This will be the
    default authentication mechanism for my new apps.
 
-= 3.0.8 (unreleased)
+
+3.0.8
+-----
 
  * [FIXED] Missing alias. (Commit 2af7d4cfd98bb0)
 
-= 3.0.7
 
- *[CHANGED] Updated assets. Please run the `typus:assets` generator in order
-  to create the new files on the new location.
+3.0.7
+-----
 
-= 3.0.3
+ * [CHANGED] Updated assets. Please run the `typus:assets` generator in order
+   to create the new files on the new location.
+
+
+3.0.3
+-----
 
  * [NEW] Support for has many through relationships. [jmeiss]
 
@@ -233,7 +445,9 @@
 
  * [NEW] Better application templates.
 
-= 3.0.2
+
+3.0.2
+-----
 
  * [FIXED] Use Arel to get the data on lists. After moving to will_paginate I
    broke the data method, on each list we where "selecting ALL on the table of
@@ -243,25 +457,31 @@
    to Rails caching mechanism this was not affecting to the performance. Now we
    only see the @current_user once. (As it should be.)
 
-= 3.0.1
+
+3.0.1
+-----
 
  * [FIXED] After moving from a vendored paginator to will_paginate I removed
    some stuff which shouldn't be removed, so the 3.0.0 gem is totally broken.
 
  * [FIXED] Force query with postgresql adapter to not be case sensitive [jmeiss]
 
-= 3.0.0
+
+3.0.0
+-----
 
  * [NEW] New gem version compatible with Rails 3.
 
-= Previously
+
+Previously
+----------
 
 Why a 3.0.0 version? After considering the work done for the Rails 3 transition
 I though it would be a good idea to keep versions syncronized with Rails.
 
-Typus will have the same version numbers as Rails as I considered it's pretty
-tied to it. With each release of Rails, we will take the latest features into
-Typus.
+**Typus** will have the same version numbers as Rails as I considered it's
+pretty tied to it. With each release of Rails, we will take the latest features
+into **Typus**.
 
 Pending stuff that someday will be done, donations and collaborations are
 accepted.
@@ -275,5 +495,3 @@ accepted.
 * Nested models.
 
 * Contextual content depending on the role logged.
-
-* Replace typus authentication by devise.

@@ -1,6 +1,6 @@
 module Admin::ResourcesHelper
 
-  def search(resource = @resource, params = params)
+  def admin_search(resource = @resource, params = params)
     if (typus_search = resource.typus_defaults_for(:search)) && typus_search.any?
 
       hidden_filters = params.dup
@@ -12,22 +12,13 @@ module Admin::ResourcesHelper
   end
 
   def build_sidebar
-    resources = ActiveSupport::OrderedHash.new
     app_name = @resource.typus_application
+    resources = admin_user.application(app_name).map(&:constantize).delete_if { |k| k.typus_options_for(:hide_from_sidebar) }
 
-    admin_user.application(app_name).each do |resource|
-      klass = resource.constantize
-      if klass.typus_options_for(:hide_from_sidebar) == false
-        resources[resource] = [sidebar_add_new(klass)].compact
-      end
-    end
-
-    render "helpers/admin/resources/sidebar", :resources => resources if resources.any?
-  end
-
-  def sidebar_add_new(klass)
-    if admin_user.can?("create", klass)
-      { :message => Typus::I18n.t("Add New"), :url => { :action => "new" } }
+    if resources.any?
+      render "helpers/admin/resources/sidebar", :resources => resources
+    else
+      render "admin/dashboard/sidebar"
     end
   end
 

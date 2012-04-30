@@ -9,12 +9,6 @@
 class Entry < ActiveRecord::Base
 
   ##
-  # Macros
-  #
-
-  has_trash
-
-  ##
   # Validations
   #
 
@@ -31,7 +25,7 @@ class Entry < ActiveRecord::Base
   # Scopes
   #
 
-  default_scope where(:deleted_at => nil)
+  scope :published, where(:published => true)
 
   ##
   # Instance Methods

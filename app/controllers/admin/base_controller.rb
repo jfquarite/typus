@@ -2,12 +2,9 @@ class Admin::BaseController < ActionController::Base
 
   include Typus::Authentication::const_get(Typus.authentication.to_s.classify)
 
-  before_filter :reload_config_and_roles
-  before_filter :authenticate
-  before_filter :set_locale
+  before_filter :reload_config_and_roles, :authenticate, :set_locale
 
-  helper_method :admin_user
-  helper_method :current_role
+  helper_method :admin_user, :current_role
 
   protected
 
@@ -27,8 +24,13 @@ class Admin::BaseController < ActionController::Base
     Typus.user_class.count.zero?
   end
 
-  def not_allowed
-    render :text => "Not allowed!", :status => :unprocessable_entity
+  def not_allowed(reason = nil)
+    message = reason ? "Not allowed! #{reason}" : "Not allowed!"
+    render :text => message, :status => :unprocessable_entity
+  end
+
+  def admin_user_params
+    params[Typus.user_class_as_symbol]
   end
 
 end

@@ -2,9 +2,7 @@ class Admin::AccountController < Admin::BaseController
 
   layout 'admin/session'
 
-  skip_before_filter :reload_config_and_roles
-  skip_before_filter :authenticate
-  skip_before_filter :set_locale
+  skip_before_filter :reload_config_and_roles, :authenticate, :set_locale
 
   before_filter :sign_in?, :except => [:forgot_password, :send_password, :show]
   before_filter :new?, :only => [:forgot_password, :send_password]
@@ -14,14 +12,14 @@ class Admin::AccountController < Admin::BaseController
   end
 
   def create
-    user = Typus.user_class.generate(:email => params[:typus_user][:email])
+    user = Typus.user_class.generate(:email => admin_user_params[:email])
     redirect_to user ? { :action => "show", :id => user.token } : { :action => :new }
   end
 
   def forgot_password; end
 
   def send_password
-    if user = Typus.user_class.find_by_email(params[:typus_user][:email])
+    if user = Typus.user_class.find_by_email(admin_user_params[:email])
       Admin::Mailer.reset_password_instructions(user).deliver
       redirect_to new_admin_session_path, :notice => Typus::I18n.t("Password recovery link sent to your email.")
     else

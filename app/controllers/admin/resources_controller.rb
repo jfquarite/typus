@@ -1,11 +1,12 @@
 class Admin::ResourcesController < Admin::BaseController
 
+  include Typus::Controller::Navigation
   include Typus::Controller::Actions
   include Typus::Controller::Filters
   include Typus::Controller::Format
   include Typus::Controller::Headless
 
-  Whitelist = [:edit, :update, :destroy, :toggle, :position, :relate, :unrelate]
+  Whitelist = [:edit, :update, :destroy, :toggle]
 
   before_filter :get_model
   before_filter :set_context
@@ -23,11 +24,12 @@ class Admin::ResourcesController < Admin::BaseController
     respond_to do |format|
       format.html do
         set_default_action
-        add_resource_action("Trash", {:action => "destroy"}, {:confirm => "#{Typus::I18n.t("Trashh")}", :method => 'delete'})
-        generate_html
+        add_resource_action("Trash", {:action => "destroy"}, {:confirm => "#{Typus::I18n.t("Trash")}?", :method => 'delete'})
       end
 
-      %w(json xml csv).each { |f| format.send(f) { send("generate_#{f}") } }
+      format.csv { generate_csv }
+      format.json { export(:json) }
+      format.xml { export(:xml) }
     end
   end
 
@@ -35,7 +37,7 @@ class Admin::ResourcesController < Admin::BaseController
     @item = @resource.new(params[:resource])
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.json { render :json => @item }
     end
   end
@@ -75,9 +77,13 @@ class Admin::ResourcesController < Admin::BaseController
       prepend_resources_action("Edit", {:action => 'edit', :id => @item})
     end
 
+    custom_actions_for(:show).each do |action|
+      prepend_resources_action(action.titleize, {:action => action, :id => @item})
+    end
+
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml { can_export?(:xml) ? render(:xml => @item) : not_allowed }
+      format.html
+      format.xml { render :xml => @item }
       format.json { render :json => @item }
     end
   end
@@ -132,6 +138,8 @@ class Admin::ResourcesController < Admin::BaseController
 
   def resource
     params[:controller].extract_class
+  rescue
+    params[:controller].extract_singular_class
   end
   helper_method :resource
 
@@ -149,7 +157,7 @@ class Admin::ResourcesController < Admin::BaseController
     set_wheres
     set_joins
     check_resources_ownership if @resource.typus_options_for(:only_user_items)
-    set_order
+    set_order if @resource.respond_to?(:order)
     set_eager_loading
   end
 
@@ -158,15 +166,14 @@ class Admin::ResourcesController < Admin::BaseController
   end
   helper_method :fields
 
-  # Here we set the current scope!
   def set_scope
-    if (scope = params[:scope])
-     if @resource.respond_to?(scope)
-       @resource = @resource.send(scope)
-     else
-       not_allowed
-     end
-   end
+    return unless params[:scope]
+
+    if @resource.typus_scopes.include?(params[:scope])
+      @resource = @resource.send(params[:scope])
+    else
+      not_allowed("Requested scope not defined on your whitelist.")
+    end
   end
 
   def set_wheres
@@ -198,12 +205,12 @@ class Admin::ResourcesController < Admin::BaseController
   def redirect_on_success
     path = params.dup.cleanup
 
-    options = if params[:_save]
-      { :action => nil, :id => nil }
-    elsif params[:_addanother]
-     { :action => 'new', :id => nil }
-   # elsif params[:_continue]
+    options = if params[:_addanother]
+      { :action => 'new', :id => nil }
+    #elsif params[:_continue]
     #  { :action => 'edit', :id => @item.id }
+    else
+      { :action => nil, :id => nil }
     end
 
     message = params[:action].eql?('create') ? "%{model} successfully created." : "%{model} successfully updated."

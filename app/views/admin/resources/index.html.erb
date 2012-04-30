@@ -1,6 +1,6 @@
 <%
   page_title = @resource.model_name.human.pluralize
-  title(page_title)
+  admin_title(page_title)
 %>
 
 <% content_for :main_grid do %>
@@ -10,34 +10,43 @@
     <small><%= list_actions %></small>
   </h2>
 
-  <%= display_flash_message %>
+  <%= admin_display_flash_message %>
 
   <%= render 'index' %>
 
   <ul class="predefined_filters">
-    <li><%= link_to Typus::I18n.t("All"), params.dup.cleanup.merge(:action => 'index') %> (<%= resource.count %>)</li>
+    <li>
+      <%= link_to Typus::I18n.t("All"), params.dup.cleanup.merge(:action => 'index') %>
+      <%= "(#{resource.count})" if @resource.typus_options_for(:counters) %>
+    </li>
 
-    <% scopes.each do |scope| %>
-      <li><%= link_to Typus::I18n.t(scope.humanize), :scope => scope %> <%= "(#{@resource.send(scope).count})" %></li>
+    <% @resource.typus_scopes.each do |scope| %>
+      <li>
+        <%= link_to Typus::I18n.t(scope.humanize), :scope => scope %>
+        <%= "(#{@resource.send(scope).count})" if @resource.typus_options_for(:counters)  %>
+      </li>
     <% end %>
 
     <% predefined_filters.each do |filter, action, scope| %>
-      <% url = action.is_a?(String) ? params.dup.cleanup.merge(:action => action) : action %>
-      <li><%= link_to Typus::I18n.t(filter), url %> <%= "(#{@resource.send(scope).count})" if scope && @resource.respond_to?(scope) %></li>
+      <li>
+        <% url = action.is_a?(String) ? params.dup.cleanup.merge(:action => action) : action %>
+        <%= link_to Typus::I18n.t(filter), url %>
+        <%= "(#{@resource.send(scope).count})" if @resource.typus_options_for(:counters) && scope && @resource.respond_to?(scope) %>
+      </li>
     <% end %>
 
     <% if resource.any? && (formats = resource.typus_options_for(:export).extract_settings).any? %>
       <li>|</li>
       <% formats.each do |format| %>
-        <li><%= link_to format.upcase, :format => format %></li>
+        <li><%= link_to format.upcase, params.merge(:format => format) %></li>
       <% end %>
     <% end %>
   </ul>
 
-  <% if (build_filters || search) %>
+  <% if (build_filters || admin_search) %>
     <div class="filters">
       <%= build_filters %>
-      <%= search %>
+      <%= admin_search %>
     </div>
   <% end %>
 
@@ -47,9 +56,9 @@
     <% else %>
       <%= build_list(@resource, fields, @items) %>
     <% end %>
-    <%= paginate(@items, Typus.pagination) %>
+    <%= admin_paginate(@items, Typus.pagination) %>
   <% else %>
-    <p><%= Typus::I18n.t("No %{resources} found.", :resources => @resource.model_name.human(:count => 2)) %></p>
+    <p><%= Typus::I18n.t("No entries found.") %></p>
   <% end %>
 
 <% end %>

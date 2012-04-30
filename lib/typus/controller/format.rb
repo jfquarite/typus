@@ -6,57 +6,44 @@ module Typus
 
       protected
 
+      # This is crazy, but I want to have support for Kaminari, WillPaginate
+      # and whatever other pagination system which comes.
       def get_paginated_data
         items_per_page = @resource.typus_options_for(:per_page)
-        @items = @resource.page(params[:page]).per(items_per_page)
-      end
 
-      alias_method :generate_html, :get_paginated_data
-
-      #--
-      # TODO: Find in batches only works properly if it's used on models, not
-      #       controllers, so in this action does nothing. We should find a way
-      #       to be able to process large amounts of data.
-      #++
-      def generate_csv
-        if can_export?(:csv)
-          fields = @resource.typus_fields_for(:csv)
-
-          filename = Rails.root.join("tmp", "export-#{@resource.to_resource}-#{Time.zone.now.to_s(:number)}.csv")
-
-          options = { :conditions => @conditions, :batch_size => 1000 }
-
-          ::CSV.open(filename, 'w') do |csv|
-            csv << fields.keys
-            @resource.find_in_batches(options) do |records|
-              records.each do |record|
-                csv << fields.map do |key, value|
-                         case value
-                         when :transversal
-                           a, b = key.split(".")
-                           record.send(a).send(b)
-                         when :belongs_to
-                           record.send(key).try(:to_label)
-                         else
-                           record.send(key)
-                         end
-                       end
-              end
-            end
-          end
-
-          send_file filename
+        @items = if defined?(Kaminari)
+          @resource.page(params[:page]).per(items_per_page)
+        elsif defined?(WillPaginate)
+          @resource.paginate(:page => params[:page], :per_page => items_per_page)
         else
-          not_allowed
+          # TODO: Pagination at this point is disabled so we need to implement
+          # our own pagination solution. At this point we are showing a message
+          # to the user suggesting to install Kamaniri or WillPaginate.
+          @resource.limit(items_per_page)
         end
       end
 
-      def generate_json
-        export(:json)
-      end
+      def generate_csv
+        fields = @resource.typus_fields_for(:csv)
 
-      def generate_xml
-        can_export?(:xml) ? export(:xml) : not_allowed
+        data = ::CSV.generate do |csv|
+          csv << fields.keys.map { |k| @resource.human_attribute_name(k) }
+          @resource.all.each do |record|
+            csv << fields.map do |key, value|
+                     case value
+                     when :transversal
+                       a, b = key.split(".")
+                       record.send(a).send(b)
+                     when :belongs_to
+                       record.send(key).try(:to_label)
+                     else
+                       record.send(key)
+                     end
+                   end
+          end
+        end
+
+        send_data data, :filename => "export-#{@resource.to_resource}-#{Time.zone.now.to_s(:number)}.csv"
       end
 
       def export(format)
@@ -67,10 +54,6 @@ module Typus
         get_paginated_data
 
         render format => @items.send("to_#{format}", :methods => methods, :except => except)
-      end
-
-      def can_export?(format)
-        @resource.typus_options_for(:export).extract_settings.include?(format.to_s)
       end
 
     end

@@ -4,7 +4,7 @@ module Admin::Resources::ListHelper
     resources_actions_for_current_role.map do |body, url, options|
       path = params.dup.merge!(url).compact.cleanup
       link_to Typus::I18n.t(body), path, options
-    end.compact.join(" / ").html_safe
+    end.compact.reverse.join(" / ").html_safe
   end
 
   def resources_actions_for_current_role
@@ -26,10 +26,6 @@ module Admin::Resources::ListHelper
     render "admin/#{resource}/list", :items => items
   rescue ActionView::MissingTemplate
     build_table(model, fields, items, link_options, association, association_name)
-  end
-
-  def scopes
-    @resource.typus_defaults_for(:scopes).reject { |s| !@resource.respond_to?(s) }
   end
 
 end

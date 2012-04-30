@@ -19,13 +19,16 @@ module Typus
 
             attr_protected :role, :status
 
-            validates :email, :presence => true, :uniqueness => true, :format => { :with => Typus::Regex::Email }
+            validates :email,
+                      :presence => true,
+                      :uniqueness => true,
+                      :format => { :with => Typus::Regex::Email }
 
             validates :password,
-                      :confirmation => { :if => :password_required? },
-                      :presence => { :if => :password_required? }
-
-            validates_length_of :password, :within => 6..40, :if => :password_required?
+                      :confirmation => true,
+                      :presence => true,
+                      :length => 6..40,
+                      :if => :password_required?
 
             validates :role, :presence => true
 
@@ -43,11 +46,6 @@ module Typus
         end
 
         module InstanceMethods
-
-          def to_label
-            full_name = [first_name, last_name].delete_if { |s| s.blank? }
-            full_name.any? ? full_name.join(" ") : email
-          end
 
           def locale
             (preferences && preferences[:locale]) ? preferences[:locale] : ::I18n.default_locale

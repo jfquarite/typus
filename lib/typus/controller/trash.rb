@@ -1,9 +1,4 @@
-##
-# This module is designed to work with `rails-trash`. Add it to your `Gemfile`
-# if you have plans to use it:
-#
-#     gem "rails-trash", "~> 1.1.1"
-#
+# Module designed to work with `rails-trash`.
 module Typus
   module Controller
     module Trash
@@ -30,25 +25,27 @@ module Typus
             add_resource_action 'Restore', { :action => 'restore' }, { :confirm => Typus::I18n.t("Restore %{resource}?", :resource => @resource.model_name.human) }
             add_resource_action 'Delete Permanently', { :action => 'wipe' }, { :confirm => Typus::I18n.t("Delete Permanently?") }
             # Generate and render.
-            generate_html
+            get_paginated_data
             render 'index'
           end
 
-          %w(json xml csv).each { |f| format.send(f) { send("generate_#{f}") } }
+          format.csv { generate_csv }
+          format.json { export(:json) }
+          format.xml { export(:xml) }
         end
       end
 
       def restore
         @resource.restore(params[:id])
-        redirect_to :back, :notice => Typus::I18n.t("%{resource} recovered from trash.", :resource => @resource.name)
+        redirect_to :back, :notice => Typus::I18n.t("%{resource} recovered from trash.", :resource => @resource.model_name.human)
       rescue ActiveRecord::RecordNotFound
-        redirect_to :back, :notice => Typus::I18n.t("%{resource} can't be recovered from trash.", :resource => @resource.name)
+        redirect_to :back, :notice => Typus::I18n.t("%{resource} can't be recovered from trash.", :resource => @resource.model_name.human)
       end
 
       def wipe
         item = @resource.find_in_trash(params[:id])
         item.disable_trash { item.destroy }
-        redirect_to :back, :notice => Typus::I18n.t("%{resource} has been successfully removed from trash.", :resource => @resource.name)
+        redirect_to :back, :notice => Typus::I18n.t("%{resource} has been successfully removed from trash.", :resource => @resource.model_name.human)
       end
 
       def set_deleted

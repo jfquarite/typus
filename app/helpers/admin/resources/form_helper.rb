@@ -59,10 +59,23 @@ module Admin::Resources::FormHelper
   end
 
   def save_options
-    { "_addanother" => "Save and add another",
+    #{ "_addanother" => "Save and add another",
      # "_continue" => "Save and continue editing",
-      "_save" => "Save",
-      "_exit" => "Salir sin guardar"}
+     # "_save" => "Save",
+     # "_exit" => "Salir sin guardar"}
+    options = {}
+
+    if admin_user.can?('create', @resource.model_name)
+      options["_addanother"] = "Save and add another"
+    end
+
+   # if admin_user.can?('edit', @resource.model_name)
+   #   options["_continue"] = "Save and continue editing"
+   # end
+
+    options["_save"] = "Save"
+    options["_exit"] = "Salir sin guardar"
+    options
   end
 
   def save_options_for_headless_mode
