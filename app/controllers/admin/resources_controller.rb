@@ -25,6 +25,7 @@ class Admin::ResourcesController < Admin::BaseController
       format.html do
         set_default_action
         add_resource_action("Trash", {:action => "destroy"}, {:confirm => "#{Typus::I18n.t("Trash")}?", :method => 'delete'})
+        get_paginated_data
       end
 
       format.csv { generate_csv }
